@@ -10,6 +10,7 @@ class CalorieTracker {
     this._displayCaloriesConsumed()
     this._displayCaloriesBurned()
     this._displayCaloriesRemaining()
+    this._displayCaloriesProgress()
   }
 
   // Public Methodes
@@ -45,7 +46,7 @@ class CalorieTracker {
   }
 
   _displayCaloriesBurned() {
-    const caloriesBurnedEl = document.getElementById("calories-burned") 
+    const caloriesBurnedEl = document.getElementById("calories-burned")
     const burned = this._workouts.reduce(
       (total, workout) => total + workout.calories,
       0
@@ -57,10 +58,32 @@ class CalorieTracker {
     const caloriesRemainingEl = document.getElementById("calories-remaining")
     const remaining = this._calorieLimit - this._totalCalories
     caloriesRemainingEl.textContent = remaining
+    const progressEl = document.getElementById("calorie-progress")
+
+    // Make Bg Danger
+    if (remaining <= 0) {
+      caloriesRemainingEl.parentElement.parentElement.classList.remove(
+        "bg-light"
+      )
+      caloriesRemainingEl.parentElement.parentElement.classList.add("bg-danger")
+      progressEl.classList.remove("bg-success")
+      progressEl.classList.add("bg-danger")
+    } else {
+      caloriesRemainingEl.parentElement.parentElement.classList.remove(
+        "bg-danger"
+      )
+      caloriesRemainingEl.parentElement.parentElement.classList.add("bg-light")
+      progressEl.classList.remove("bg-danger")
+      progressEl.classList.add("bg-success")
+    }
   }
 
-
-
+  _displayCaloriesProgress() {
+    const progressEl = document.getElementById("calorie-progress")
+    const percentage = (this._totalCalories / this._calorieLimit) * 100
+    const width = Math.min(percentage, 100)
+    progressEl.style.width = `${width}%`
+  }
 
   // Render
   _render() {
@@ -68,7 +91,8 @@ class CalorieTracker {
     this._displayCaloriesConsumed()
     this._displayCaloriesBurned()
     this._displayCaloriesRemaining()
-    // this._displayCaloriesLimit()
+    this._displayCaloriesLimit()
+    this._displayCaloriesProgress()
   }
 }
 
@@ -90,7 +114,7 @@ class Workout {
 
 const tracker = new CalorieTracker()
 const breakfast = new Meal("Breakfast", 400)
-const lunch = new Meal("Lunch", 1500)
+const lunch = new Meal("Lunch", 500)
 const workout = new Workout("Workout", 1000)
 const pushUp = new Workout("Push-up", 500)
 
@@ -98,7 +122,6 @@ tracker.addMeal(breakfast)
 tracker.addMeal(lunch)
 tracker.addWorkout(workout)
 tracker.addWorkout(pushUp)
-
 
 console.log(tracker._totalCalories)
 console.log(tracker)
