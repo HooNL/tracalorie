@@ -1,3 +1,10 @@
+import './css/bootstrap.css'
+import './css/style.css'
+import '@fortawesome/fontawesome-free/js/all'
+import { Modal, Collapse } from 'bootstrap'
+
+
+
 class CalorieTracker {
   constructor() {
     this._calorieLimit = Storage.getCalorieLimit()
@@ -424,7 +431,7 @@ class App {
     limit = ""
 
     const modelEl = document.getElementById("limit-modal")
-    const bsModel = bootstrap.Modal.getInstance(modelEl)
+    const bsModel = Modal.getInstance(modelEl)
     bsModel.hide()
   }
 }
