@@ -50,6 +50,19 @@ class CalorieTracker {
     }
   }
 
+  resetDay() {
+    this._totalCalories = 0
+    this._meals = []
+    this._workouts = []
+    this._render()
+  }
+
+  setLimit(calorieLimit) {
+    this._calorieLimit = calorieLimit
+    this._displayCaloriesLimit()
+    this._render()
+  }
+
   // Private Methodes
   _displayCaloriesTotal() {
     const caloriesEl = document.getElementById("calories-total")
@@ -198,6 +211,18 @@ class App {
     document
       .getElementById("workout-items")
       .addEventListener("click", this._removeItem.bind(this, "workout"))
+    document
+      .getElementById("filter-meals")
+      .addEventListener("keyup", this._filterItems.bind(this, "meal"))
+    document
+      .getElementById("filter-workouts")
+      .addEventListener("keyup", this._filterItems.bind(this, "workout"))
+    document
+      .getElementById("reset")
+      .addEventListener("click", this._resetDay.bind(this))
+    document
+      .getElementById("limit-form")
+      .addEventListener("submit", this._setLimit.bind(this))
   }
 
   // Add New Item
@@ -245,6 +270,48 @@ class App {
         e.target.closest(".card").remove()
       }
     }
+  }
+
+  // Filter Items
+  _filterItems(type, e) {
+    const text = e.target.value.toLowerCase()
+    document.querySelectorAll(`#${type}-items .card`).forEach((item) => {
+      const name = item.firstElementChild.firstElementChild.textContent
+      if (name.toLowerCase().indexOf(text) !== -1) {
+        item.style.display = "block"
+      } else {
+        item.style.display = "none"
+      }
+    })
+  }
+
+  // Reset day
+  _resetDay() {
+    this._tracker.resetDay()
+    document.getElementById("meal-items").innerHTML = ""
+    document.getElementById("workout-items").innerHTML = ""
+    document.getElementById("meal-form").value = ""
+    document.getElementById("meal-calories").value = ""
+    document.getElementById("workout-calories").value = ""
+    document.getElementById("workout-form").value = ""
+    document.getElementById("filter-meals").value = ""
+    document.getElementById("filter-workouts").value = ""
+  }
+
+  // Set Calories Limit
+  _setLimit(e) {
+    e.preventDefault()
+    let limit = document.getElementById("limit").value
+    if (limit === "") {
+      alert("Please add a limit")
+      return
+    }
+    this._tracker.setLimit(+limit)
+    limit = ""
+
+    const modelEl = document.getElementById("limit-modal")
+    const bsModel = bootstrap.Modal.getInstance(modelEl)
+    bsModel.hide()
   }
 }
 
