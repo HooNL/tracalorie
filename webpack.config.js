@@ -38,7 +38,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'Webpack App',
+      title: 'Tracalorie',
       filename: 'index.html',
       template: './src/index.html',
     }),
